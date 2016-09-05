@@ -1,6 +1,6 @@
 'use strict';
 //Initialize defined global variables
-var secretNumber, numGuess, userInput, count, pastGuesses, guessHtml, userGuessList, guessList, guessContent, i
+var secretNumber, numGuess, userInput, count, pastGuesses, guessContent
 
 $(document).ready(function(){
 
@@ -13,28 +13,35 @@ $(document).ready(function(){
     $("a.close").click(function(){
       $(".overlay").fadeOut(1000);
     });
+    //Call new game to Initialize secretNumber and reset all variables and rendering
     newGame();
-    getSecretNumber();
 
-    userInput = $('#userGuess');
-
+    //When button is click get the value of input and pass to userGuess
     $('#guessButton').click(function() {
+      userInput = $('#userGuess');
       numGuess = userInput.val();
       userInput.val('');
       userInput.focus();
       userGuess(numGuess);
     });
+
+    //Add submit when enter key is press
+    $(document).keyup(function(e) {
+      if (e.keyCode == 13) {
+        $('#guessButton').click();
+      };
+    });
+
+    //Call newGame when new game link is click
     $('a.new').click(newGame);
 
 });
 
 /*--- Functions ---*/
-function getSecretNumber() {
-  secretNumber = Math.floor(Math.random() * (99) + 1 );
-  console.log(secretNumber);
-}
 // New game
 function newGame() {
+  secretNumber = Math.floor(Math.random() * (99) + 1 );
+  console.log("Secret Number is: " + secretNumber);
   // reset all
   count = 0;
   pastGuesses = [];
@@ -47,7 +54,7 @@ function newGame() {
 
 //  Track how many guesses in span#count defaults to 0 on pageLoad
 function userGuess(numGuess) {
-  console.log(numGuess);
+  console.log("Number guess: " + numGuess);
 
   //Check to see if value enter is not a number
   if (isNaN(numGuess)) {
@@ -68,7 +75,7 @@ function userGuess(numGuess) {
   } else {
     var diffNum = secretNumber - numGuess;
   }
-  console.log(diffNum);
+  console.log("Difference: " + diffNum);
 
   /*--- Feedback ---*/
   //50 or more "Ice Cold"
@@ -101,13 +108,15 @@ function userGuess(numGuess) {
 
   // Track guesses
   pastGuesses.push(numGuess);
+  // reset the content on each userGuess
   guessContent = '';
-  console.log(pastGuesses);
+  console.log("Past guess: " + pastGuesses);
+  //check to see if pastGuesses array at index 0 is present
   if (pastGuesses[0].length) {
     $.each(pastGuesses, function(guess, value) {
       guessContent += '<li>' + value + '</li>';
     });
   }
-  console.log(guessContent);
+  console.log("Guess list ul content: " + guessContent);
   $('ul#guessList').html(guessContent);
 }
