@@ -49,7 +49,7 @@ function newGame() {
   // re-render all
   $('#count').html(count);
   $('ul#guessList').html(guessContent);
-  $('#feedback').html("Please enter a number.");
+  $('#feedback').html("Please enter a number.").css("background-color", "#cc324b");
 }
 
 //  Track how many guesses in span#count defaults to 0 on pageLoad
@@ -62,10 +62,14 @@ function userGuess(numGuess) {
     // End this statement
     return;
   }
-
   //Check if the number guess is NOT between 1-100
   if (numGuess < 1 || numGuess > 100) {
     $('#feedback').html("Please enter a number between 1-100.");
+    return;
+  }
+  // Check if number is repeated
+  if ($.inArray(numGuess, pastGuesses) > -1) {
+    $('#feedback').html("You've already guessed this number.");
     return;
   }
 
@@ -99,7 +103,7 @@ function userGuess(numGuess) {
     $('#feedback').html("Very Hot");
   }
   if (numGuess == secretNumber) {
-    $('#feedback').html("You Win!");
+    $('#feedback').html("You Win!").css("background-color", "green");
   }
 
   //increment the  guess count for each click
@@ -113,8 +117,8 @@ function userGuess(numGuess) {
   console.log("Past guess: " + pastGuesses);
   //check to see if pastGuesses array at index 0 is present
   if (pastGuesses[0].length) {
-    $.each(pastGuesses, function(guess, value) {
-      guessContent += '<li>' + value + '</li>';
+    pastGuesses.forEach(function (element, index, arr) {
+      guessContent += '<li>' + element + '</li>';
     });
   }
   console.log("Guess list ul content: " + guessContent);
